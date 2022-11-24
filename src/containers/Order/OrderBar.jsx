@@ -3,6 +3,7 @@ import {
   Button,
   Drawer,
   IconButton,
+  TextField,
   Toolbar,
   Typography
 } from '@mui/material'
@@ -13,27 +14,52 @@ import { useCallback } from 'react'
 import { useAddOrder } from '../actions'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 
 const drawerWidth = 400
 
 const OrderBar = ({ children }) => {
   const { orderItems, removeAllItems } = useOrder()
 
+  const { register, watch } = useForm()
+
   const navigate = useNavigate()
 
-  const total = orderItems.reduce((acc, obj) => {
+  const paymentAmount = Number(watch('paymentAmount'))
+
+  const subTotal = orderItems.reduce((acc, obj) => {
     return acc + obj.amount * obj.price
   }, 0)
+
+  const vatTotal = subTotal * 0.12
+
+  const total = subTotal + vatTotal
+
+  const change =
+    paymentAmount < total ? '0.00' : (paymentAmount - total).toFixed(2)
 
   const { isValidating: addOrderValidating, addOrder } = useAddOrder()
 
   const onSubmit = useCallback(async () => {
-    const products = orderItems.map(order => order._id)
-    const payload = { products, total }
+    const products = orderItems.map(order => ({
+      productId: order._id,
+      name: order.name,
+      barcode: order.barcode,
+      price: order.price,
+      image: order.image,
+      amount: order.amount
+    }))
+    const payload = {
+      products,
+      paymentAmount: Number(watch('paymentAmount')),
+      subTotal,
+      total
+    }
+
     await addOrder({ ...payload })
     toast.success('Added order')
 
-    return navigate('/app/dashboard')
+    return navigate(0)
   }, [orderItems])
 
   return (
@@ -96,17 +122,58 @@ const OrderBar = ({ children }) => {
               justifyContent="space-between"
               alignItems="center"
             >
+              <Typography>Sub Total</Typography>
+              <Typography>&#x20B1;{subTotal}</Typography>
+            </Box>
+            <Box
+              mb="8px"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Vat</Typography>
+              <Typography>12%</Typography>
+            </Box>
+            <Box
+              mb="8px"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Typography>Total</Typography>
               <Typography>&#x20B1;{total}</Typography>
+            </Box>
+            <Box
+              mb="8px"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Payment Amount</Typography>
+              <TextField
+                type="number"
+                placeholder="Enter amount"
+                size="small"
+                {...register('paymentAmount')}
+              />
+            </Box>
+            <Box
+              mb="8px"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Change Due</Typography>
+              <Typography>&#x20B1;{change}</Typography>
             </Box>
             <Button
               fullWidth
               size="large"
               variant="contained"
               onClick={onSubmit}
-              disabled={addOrderValidating}
+              disabled={addOrderValidating || paymentAmount < total}
             >
-              Confirm
+              {paymentAmount < total ? 'Insufficient Amount' : 'Confirm'}
             </Button>
           </Box>
         </Box>

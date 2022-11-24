@@ -1,15 +1,16 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import Header from '../components/Header'
 import RecentOrder from '../containers/Dashboard/RecentOrder'
 import SalesChart from '../containers/Dashboard/SalesChart'
 import Statistics from '../containers/Dashboard/Statistics'
 import InventoriesTable from '../containers/Dashboard/InventoriesTable'
 import { useGetAllOrders, useGetAllProducts } from '../containers/actions'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import moment from 'moment'
 import Loading from '../components/Loading'
 import { useOrder } from '../contexts/OrderContext'
 import OrderDialog from './OrderDialog'
+import AddProductDialog from '../containers/Dashboard/AddProductDialog'
 
 const DashboardPage = () => {
   const { selectedOrder, setSelectedOrder } = useOrder()
@@ -18,6 +19,8 @@ const DashboardPage = () => {
     isValidating: productsValidating,
     mutate: productMutate
   } = useGetAllProducts()
+
+  const [openAdd, setOpenAdd] = useState(false)
 
   const { data: orders, isValidating: ordersValidating } = useGetAllOrders()
 
@@ -43,6 +46,7 @@ const DashboardPage = () => {
           order={order}
         />
       )}
+      <AddProductDialog onClose={() => setOpenAdd(false)} open={openAdd} />
       <Box m="24px">
         <Header title="DASHBOARD" />
         <Box display="grid" gridTemplateColumns="repeat(9, 1fr)" gap="24px">
@@ -52,9 +56,14 @@ const DashboardPage = () => {
           <Box gridColumn="span 6" height="300px">
             <Statistics orders={orders} />
           </Box>
-          <Typography gridColumn="span 9" variant="h4" fontWeight="bold">
-            Inventory & Orders
-          </Typography>
+          <Box gridColumn="span 9">
+            <Typography variant="h4" fontWeight="bold">
+              Inventory & Orders
+            </Typography>
+            <Button variant="contained" onClick={() => setOpenAdd(true)}>
+              Add Product
+            </Button>
+          </Box>
           <Box gridColumn="span 6" height="300px">
             <InventoriesTable products={products} mutate={productMutate} />
           </Box>

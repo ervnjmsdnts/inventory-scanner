@@ -38,9 +38,9 @@ const Statistics = ({ orders }) => {
         justifyContent="space-evenly"
         alignItems="center"
       >
-        <StatItem title="TODAY'S SALES" value={todaysSalesValue} />
-        <StatItem title="LAST 7 DAYS" value={past7DaysValue} />
-        <StatItem title="LAST 30 DAYS" value={past30DaysValue} />
+        <StatItem title="TODAY'S SALES" value={todaysSalesValue.toFixed(2)} />
+        <StatItem title="LAST 7 DAYS" value={past7DaysValue.toFixed(2)} />
+        <StatItem title="LAST 30 DAYS" value={past30DaysValue.toFixed(2)} />
       </Box>
     </Box>
   )
