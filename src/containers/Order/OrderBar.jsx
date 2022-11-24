@@ -21,7 +21,9 @@ const drawerWidth = 400
 const OrderBar = ({ children }) => {
   const { orderItems, removeAllItems } = useOrder()
 
-  const { register, watch } = useForm()
+  const { register, watch } = useForm({
+    defaultValues: { paymentAmount: 0 }
+  })
 
   const navigate = useNavigate()
 
@@ -154,7 +156,7 @@ const OrderBar = ({ children }) => {
                 type="number"
                 placeholder="Enter amount"
                 size="small"
-                {...register('paymentAmount')}
+                {...register('paymentAmount', { min: 0 })}
               />
             </Box>
             <Box
