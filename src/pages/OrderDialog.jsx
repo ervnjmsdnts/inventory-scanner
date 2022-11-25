@@ -16,6 +16,8 @@ const Order = ({ image, name, price, amount }) => {
 }
 
 const OrderDialog = ({ onClose, open, order }) => {
+  const vatTotal = (order.subTotal * 0.12).toFixed(2)
+  const vatableSale = (order.subTotal - vatTotal).toFixed(2)
   return (
     <Dialog onClose={onClose} open={open}>
       <DialogTitle>Order Details</DialogTitle>
@@ -43,16 +45,16 @@ const OrderDialog = ({ onClose, open, order }) => {
         p="8px 16px"
       >
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography>Sub Total</Typography>
+          <Typography>Total</Typography>
           <Typography>&#x20B1;{order.subTotal}</Typography>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography>Vat</Typography>
-          <Typography>12%</Typography>
+          <Typography>Vatable Sale</Typography>
+          <Typography>&#x20B1;{vatableSale}</Typography>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography>Total</Typography>
-          <Typography>&#x20B1;{order.total}</Typography>
+          <Typography>Vat (12%)</Typography>
+          <Typography>&#x20B1;{vatTotal}</Typography>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography>Payment Amount</Typography>
@@ -61,7 +63,7 @@ const OrderDialog = ({ onClose, open, order }) => {
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography>Change Due</Typography>
           <Typography>
-            &#x20B1;{(order.paymentAmount - order.total).toFixed(2)}
+            &#x20B1;{(order.paymentAmount - order.subTotal).toFixed(2)}
           </Typography>
         </Box>
       </Box>

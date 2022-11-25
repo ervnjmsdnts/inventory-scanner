@@ -33,12 +33,14 @@ const OrderBar = ({ children }) => {
     return acc + obj.amount * obj.price
   }, 0)
 
-  const vatTotal = subTotal * 0.12
+  const vatTotal = (subTotal * 0.12).toFixed(2)
 
   const total = subTotal + vatTotal
 
   const change =
-    paymentAmount < total ? '0.00' : (paymentAmount - total).toFixed(2)
+    paymentAmount < subTotal ? '0.00' : (paymentAmount - subTotal).toFixed(2)
+
+  const vatableSale = (subTotal - vatTotal).toFixed(2)
 
   const { isValidating: addOrderValidating, addOrder } = useAddOrder()
 
@@ -124,7 +126,7 @@ const OrderBar = ({ children }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography>Sub Total</Typography>
+              <Typography>Total</Typography>
               <Typography>&#x20B1;{subTotal}</Typography>
             </Box>
             <Box
@@ -133,8 +135,8 @@ const OrderBar = ({ children }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography>Vat</Typography>
-              <Typography>12%</Typography>
+              <Typography>Vatable Sale</Typography>
+              <Typography>&#x20B1;{vatableSale}</Typography>
             </Box>
             <Box
               mb="8px"
@@ -142,8 +144,8 @@ const OrderBar = ({ children }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography>Total</Typography>
-              <Typography>&#x20B1;{total}</Typography>
+              <Typography>Vat (12%)</Typography>
+              <Typography>&#x20B1;{vatTotal}</Typography>
             </Box>
             <Box
               mb="8px"
@@ -173,9 +175,9 @@ const OrderBar = ({ children }) => {
               size="large"
               variant="contained"
               onClick={onSubmit}
-              disabled={addOrderValidating || paymentAmount < total}
+              disabled={addOrderValidating || paymentAmount < subTotal}
             >
-              {paymentAmount < total ? 'Insufficient Amount' : 'Confirm'}
+              {paymentAmount < subTotal ? 'Insufficient Amount' : 'Confirm'}
             </Button>
           </Box>
         </Box>
