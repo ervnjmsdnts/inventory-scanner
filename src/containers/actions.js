@@ -161,7 +161,38 @@ const useAddOrder = () => {
   }
 }
 
+const useChangeImage = () => {
+  const [response, setResponse] = useState()
+  const [error, setError] = useState()
+  const [isValidating, setIsValidating] = useState(false)
+
+  const changeImage = useCallback(async (id, payload = {}) => {
+    try {
+      setIsValidating(true)
+      const { data } = await client.patch(
+        `/product/change-image/${id}`,
+        payload
+      )
+      setResponse(data)
+      return data
+    } catch (error) {
+      setError(error)
+      throw error
+    } finally {
+      setIsValidating(false)
+    }
+  }, [])
+
+  return {
+    data: response,
+    error,
+    isValidating,
+    changeImage
+  }
+}
+
 export {
+  useChangeImage,
   useLogin,
   useGetAllProducts,
   useGetProduct,

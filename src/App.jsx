@@ -5,6 +5,7 @@ import AddProductPage from './pages/AddProductPage'
 import OrderPage from './pages/OrderPage'
 import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
+import ScanPage from './pages/ScanPage'
 
 export const Apps = () => {
   return (
@@ -18,6 +19,7 @@ export const Apps = () => {
           <Route path="orders" element={<OrderPage />} />
         </Route>
         <Route path="/add-product/:barcode" element={<AddProductPage />} />
+        <Route path="/scan" element={<ScanPage />} />
       </Routes>
     </BrowserRouter>
   )

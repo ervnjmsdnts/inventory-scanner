@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import moment from 'moment'
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts'
 
@@ -41,12 +41,24 @@ const SalesChart = ({ orders }) => {
 
   return (
     <Box
+      sx={{ position: 'relative' }}
       backgroundColor="primary.main"
       width="100%"
       height="100%"
       borderRadius="12px"
       color="white"
     >
+      <Button
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          zIndex: 10,
+          color: 'white'
+        }}
+      >
+        View
+      </Button>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={orderCharts}>
           <Tooltip content={<CustomToolTip />} />

@@ -1,9 +1,10 @@
-import { DeleteOutline } from '@mui/icons-material'
-import { Box, colors, IconButton } from '@mui/material'
+import { DeleteOutline, UploadFile } from '@mui/icons-material'
+import { Box, Button, colors, IconButton, Tooltip } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useDeleteProduct, useUpdateProduct } from '../actions'
+import { useChangeImage, useDeleteProduct } from '../actions'
+import AddProductDialog from './AddProductDialog'
 
 const DeleteButton = ({ id, mutate }) => {
   const { deleteProduct } = useDeleteProduct()
@@ -15,65 +16,123 @@ const DeleteButton = ({ id, mutate }) => {
   }, [mutate])
 
   return (
-    <IconButton onClick={deleteExec}>
-      <DeleteOutline sx={{ color: colors.red[300] }} />
-    </IconButton>
+    <Tooltip title="Delete Product">
+      <IconButton onClick={deleteExec}>
+        <DeleteOutline sx={{ color: colors.red[300] }} />
+      </IconButton>
+    </Tooltip>
+  )
+}
+
+const ChangeImageButton = ({ id, mutate }) => {
+  const { changeImage } = useChangeImage()
+  const handleChangeImage = (e, id) => {
+    e.preventDefault()
+
+    const reader = new FileReader()
+    const file = e.target.files[0]
+    reader.readAsDataURL(file)
+    reader.onloadend = async () => {
+      try {
+        await changeImage(id, { image: reader.result })
+        toast.success('Image Changed Successfully')
+        return mutate()
+      } catch (error) {
+        console.log(error)
+        toast.error('Something went wrong')
+      }
+    }
+  }
+
+  return (
+    <Tooltip title="Change Image">
+      <Button component="label">
+        <UploadFile sx={{ color: colors.blue[300] }} />
+        <input type="file" hidden onChange={e => handleChangeImage(e, id)} />
+      </Button>
+    </Tooltip>
   )
 }
 
 const InventoriesTable = ({ products, mutate }) => {
   const columns = [
     {
+      field: 'image',
+      headerName: '',
+      renderCell: params => (
+        <Box component="img" src={params.row.image} width="50px" />
+      ),
+      align: 'center',
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true
+    },
+    {
       field: 'barcode',
       headerName: 'Barcode',
-      width: 200
+      flex: 1
     },
-    { field: 'name', headerName: 'Name', width: 400, editable: true },
+    { field: 'name', headerName: 'Name', flex: 1 },
     {
       field: 'quantity',
       headerName: 'Quantity',
-      type: 'number',
-      editable: true
+      type: 'number'
     },
-    { field: 'price', headerName: 'Price', type: 'number', editable: true },
+    { field: 'price', headerName: 'Price', type: 'number' },
     {
+      field: 'delete',
       headerName: '',
       renderCell: params => <DeleteButton id={params.id} mutate={mutate} />,
       align: 'center',
       sortable: false,
       filterable: false,
-      disableColumnMenu: true,
-      width: 200
+      disableColumnMenu: true
+    },
+    {
+      field: 'changeImage',
+      headerName: '',
+      renderCell: params => (
+        <ChangeImageButton id={params.id} mutate={mutate} />
+      ),
+      align: 'center',
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true
     }
   ]
 
-  const { updateProduct } = useUpdateProduct()
+  const [open, setOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
-  const cellEditCommit = useCallback(
-    async params => {
-      await updateProduct(params.id, { [params.field]: params.value })
-      toast.success('Saved')
-      return mutate()
-    },
-    [mutate]
-  )
+  const openModal = data => {
+    setSelectedProduct(data)
+    setOpen(true)
+  }
 
   return (
-    <Box
-      width="100%"
-      height="100%"
-      borderRadius="12px"
-      backgroundColor={colors.blueGrey[50]}
-    >
-      <DataGrid
-        getRowId={row => row._id}
-        sx={{ border: 'none' }}
-        rows={products}
-        onCellEditCommit={cellEditCommit}
-        columns={columns}
-        pageSize={10}
+    <>
+      <AddProductDialog
+        open={open}
+        onClose={() => setOpen(false)}
+        isEdit
+        data={selectedProduct}
       />
-    </Box>
+      <Box
+        width="100%"
+        height="100%"
+        borderRadius="12px"
+        backgroundColor={colors.blueGrey[50]}
+      >
+        <DataGrid
+          getRowId={row => row._id}
+          sx={{ border: 'none' }}
+          rows={products}
+          onRowDoubleClick={item => openModal(item.row)}
+          columns={columns}
+          pageSize={10}
+        />
+      </Box>
+    </>
   )
 }
 

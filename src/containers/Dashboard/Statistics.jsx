@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import moment from 'moment'
 
 const StatItem = ({ title, value = 0 }) => {
@@ -32,7 +32,14 @@ const Statistics = ({ orders }) => {
     .reduce((acc, obj) => acc + obj.subTotal, 0)
 
   return (
-    <Box width="100%" height="100%" border="1px solid gray" borderRadius="12px">
+    <Box
+      width="100%"
+      sx={{ position: 'relative' }}
+      height="100%"
+      border="1px solid gray"
+      borderRadius="12px"
+    >
+      <Button sx={{ position: 'absolute', top: 0, right: 0 }}>View</Button>
       <Box
         display="flex"
         height="100%"

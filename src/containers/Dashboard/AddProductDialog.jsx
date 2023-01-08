@@ -6,31 +6,56 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { useAddProduct } from '../actions'
+import { mutate } from 'swr'
+import { useAddProduct, useUpdateProduct } from '../actions'
 
-const AddProductDialog = ({ onClose, open }) => {
-  const { register, handleSubmit } = useForm({
+const AddProductDialog = ({ onClose, open, isEdit, data }) => {
+  const { register, handleSubmit, setValue } = useForm({
     defaultValues: { price: 0, quantity: 0 }
   })
 
   const { addProduct, isValidating: addValidating } = useAddProduct()
+  const { updateProduct, isValidating: editValidating } = useUpdateProduct()
+
+  useEffect(() => {
+    const setProduct = () => {
+      if (!isEdit && !data) return
+      setValue('barcode', data?.barcode)
+      setValue('name', data?.name)
+      setValue('price', data?.price)
+      setValue('quantity', data?.quantity)
+    }
+    setProduct()
+  }, [isEdit, data])
 
   const navigate = useNavigate()
 
-  const onSubmit = useCallback(async data => {
-    await addProduct({
-      ...data
-    })
+  const isValidating = useMemo(
+    () => addValidating || editValidating,
+    [addValidating, editValidating]
+  )
 
-    navigate(0)
-  }, [])
+  const onSubmit = useCallback(
+    async payload => {
+      if (isEdit) {
+        await updateProduct(data?._id, { ...payload })
+      } else {
+        await addProduct({
+          ...payload
+        })
+      }
+
+      navigate(0)
+    },
+    [data, isEdit]
+  )
 
   return (
     <Dialog onClose={onClose} open={open}>
-      <DialogTitle>Add Product</DialogTitle>
+      <DialogTitle>{isEdit ? 'Edit Product' : 'Add Product'}</DialogTitle>
       <Box
         display="flex"
         flexDirection="column"
@@ -42,7 +67,7 @@ const AddProductDialog = ({ onClose, open }) => {
         <Typography variant="h5" fontWeight="bold">
           Barcode
         </Typography>
-        <TextField placeholder="Name" {...register('barcode')} />
+        <TextField placeholder="Code" {...register('barcode')} />
         <Typography variant="h5" fontWeight="bold">
           Name
         </Typography>
@@ -69,7 +94,7 @@ const AddProductDialog = ({ onClose, open }) => {
         variant="contained"
         size="large"
         onClick={handleSubmit(onSubmit)}
-        disabled={addValidating}
+        disabled={isValidating}
       >
         Save
       </Button>

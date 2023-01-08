@@ -8,6 +8,7 @@ import swrConfig from './lib/swrConfig'
 import { Toaster } from 'react-hot-toast'
 import { theme } from './theme'
 import OrderProvider from './contexts/OrderContext'
+import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
