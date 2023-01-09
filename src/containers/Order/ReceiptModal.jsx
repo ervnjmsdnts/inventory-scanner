@@ -9,9 +9,12 @@ const ReceiptModal = ({ open, onClose, data }) => {
     content: () => componentRef.current,
     documentTitle: 'receipt',
     pageStyle: `
+        @page {
+            size: 220px  ${componentRef.current.clientHeight} !important;
+        }
         @media print {
             @page {
-                size: 220px ${componentRef.current.clientHeight};
+                size: 220px ${componentRef.current.clientHeight} !important;
                 margin: 0;
             }
         }
