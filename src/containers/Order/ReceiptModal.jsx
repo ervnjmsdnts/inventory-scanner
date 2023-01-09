@@ -1,16 +1,13 @@
 import { Box, Button, Dialog, Divider, Typography } from '@mui/material'
 import moment from 'moment'
 import { Fragment, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useReactToPrint } from 'react-to-print'
 
 const ReceiptModal = ({ open, onClose, data }) => {
-  const navigate = useNavigate()
   const componentRef = useRef()
   const printReceipt = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: 'receipt',
-    onAfterPrint: () => navigate('/app/dashboard'),
     pageStyle: `
         @media print {
             @page {
