@@ -4,7 +4,7 @@ export const API_URL = 'https://inventory-scanner-api.vercel.app/api'
 export const LOCAL_URL = 'http://localhost:8080/api'
 
 const client = axios.create({
-  baseURL: LOCAL_URL
+  baseURL: API_URL
 })
 
 client.interceptors.request.use(async config => {
