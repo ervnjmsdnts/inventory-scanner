@@ -11,7 +11,7 @@ const ReceiptModal = ({ open, onClose, data }) => {
     pageStyle: `
         @media print {
             @page {
-                size: 58mm 500mm;
+                size: 220px ${componentRef.current.clientHeight};
                 margin: 0;
             }
         }
