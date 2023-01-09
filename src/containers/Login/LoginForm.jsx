@@ -1,14 +1,20 @@
-import { Button, Stack, TextField, Typography, useTheme } from '@mui/material'
+import { Key, Person } from '@mui/icons-material'
+import {
+  Button,
+  InputAdornment,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material'
 import { Box } from '@mui/system'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useLogin } from '../actions'
+import { ReactComponent as LoginSVG } from '../../assets/login.svg'
 
 const LoginForm = () => {
-  const theme = useTheme()
-
   const auth = useAuthContext()
 
   const { register, handleSubmit } = useForm()
@@ -34,47 +40,105 @@ const LoginForm = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        flexDirection: 'column',
-        gap: 2
+        display: 'grid',
+        gridTemplateColumns: '1fr 2fr',
+        height: '100vh'
       }}
     >
-      <Typography variant="h4" fontWeight={500}>
-        Inventory
-      </Typography>
-      <Stack
-        gap={2}
+      <Box
         sx={{
-          padding: '1.5rem',
-          width: 300,
-          borderRadius: '0.5rem',
-          border: `1.5px solid ${theme.palette.info.main}`
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          gap: 2
         }}
       >
-        <TextField
-          size="small"
-          variant="outlined"
-          label="Username"
-          {...register('username')}
-        />
-        <TextField
-          size="small"
-          variant="outlined"
-          label="Password"
-          type="password"
-          {...register('password')}
-        />
-        <Button
-          variant="contained"
-          disabled={loginValidate}
-          onClick={handleSubmit(onSubmit)}
+        <Typography fontWeight="bold" color="primary.main" variant="h4">
+          Hi, Welcome Back!
+        </Typography>
+        <Stack
+          gap={2}
+          sx={{
+            padding: '1.5rem',
+            width: 500
+          }}
         >
-          {loginValidate ? 'Logging in' : 'Log in'}
-        </Button>
-      </Stack>
+          <TextField
+            size="small"
+            variant="outlined"
+            label="Username"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Person />
+                </InputAdornment>
+              )
+            }}
+            {...register('username')}
+          />
+          <TextField
+            size="small"
+            variant="outlined"
+            label="Password"
+            type="password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Key />
+                </InputAdornment>
+              )
+            }}
+            {...register('password')}
+          />
+          <Button
+            variant="contained"
+            disabled={loginValidate}
+            onClick={handleSubmit(onSubmit)}
+          >
+            {loginValidate ? 'Logging in' : 'Log in'}
+          </Button>
+        </Stack>
+      </Box>
+      <Box
+        sx={{
+          background: 'linear-gradient(to bottom, #00A3F9, #6B0AC9)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '16px'
+        }}
+        height="100%"
+      >
+        <Typography
+          color="white"
+          variant="h4"
+          fontWeight="bold"
+          textAlign="center"
+        >
+          Welcome to Your Inventory and Point of Sale System
+        </Typography>
+        <LoginSVG
+          style={{
+            width: '500px'
+          }}
+        />
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          width="100%"
+          px="64px"
+        >
+          <Typography color="lightGray">
+            &copy; All Right Reserved Saranghaeyo Korean Store
+          </Typography>
+          <Typography color="lightGray">
+            Developed & Maintaind by The Developers
+          </Typography>
+        </Box>
+      </Box>
     </Box>
   )
 }

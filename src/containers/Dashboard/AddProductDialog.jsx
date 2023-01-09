@@ -9,7 +9,6 @@ import {
 import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { mutate } from 'swr'
 import { useAddProduct, useUpdateProduct } from '../actions'
 
 const AddProductDialog = ({ onClose, open, isEdit, data }) => {
@@ -55,7 +54,20 @@ const AddProductDialog = ({ onClose, open, isEdit, data }) => {
 
   return (
     <Dialog onClose={onClose} open={open}>
-      <DialogTitle>{isEdit ? 'Edit Product' : 'Add Product'}</DialogTitle>
+      <DialogTitle
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography fontWeight="bold" variant="h5">
+          {isEdit ? 'Edit Product' : 'Add Product'}
+        </Typography>
+        {!isEdit && (
+          <Button variant="contained" onClick={() => navigate('/scan')}>
+            Scan Product
+          </Button>
+        )}
+      </DialogTitle>
       <Box
         display="flex"
         flexDirection="column"

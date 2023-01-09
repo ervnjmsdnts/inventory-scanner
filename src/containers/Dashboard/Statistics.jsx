@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import moment from 'moment'
 
 const StatItem = ({ title, value = 0 }) => {
@@ -15,7 +15,6 @@ const StatItem = ({ title, value = 0 }) => {
 }
 
 const Statistics = ({ orders }) => {
-  console.log({ orders })
   const today = moment()
   const todaysSalesValue = orders
     .filter(order => moment(order.createdAt).isSame(today, 'days'))
@@ -39,7 +38,6 @@ const Statistics = ({ orders }) => {
       border="1px solid gray"
       borderRadius="12px"
     >
-      <Button sx={{ position: 'absolute', top: 0, right: 0 }}>View</Button>
       <Box
         display="flex"
         height="100%"
