@@ -7,13 +7,3 @@
   left: 0;
   top: 0;
 }
-
-@page {
-  size: 58mm 100mm !important;
-}
-
-@media print {
-  @page {
-    size: 58mm 100mm !important;
-  }
-}

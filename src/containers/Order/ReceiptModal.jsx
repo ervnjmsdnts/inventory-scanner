@@ -8,17 +8,7 @@ const ReceiptModal = ({ open, onClose, data }) => {
   const printReceipt = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: 'receipt',
-    pageStyle: `
-        @page {
-            size: 220px 400px  !important;
-        }
-        @media print {
-            @page {
-                size: 220px 400px !important;
-                margin: 0;
-            }
-        }
-    `
+    onAfterPrint: () => onClose()
   })
 
   const vatTotal = (data?.subTotal * 0.12).toFixed(2)
