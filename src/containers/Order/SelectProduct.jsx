@@ -51,7 +51,9 @@ const SelectProduct = props => {
         <Typography fontWeight="bold" variant="h6" height="75px">
           {name}
         </Typography>
-        <Typography color={colors.grey[400]}>{quantity} Qty.</Typography>
+        <Typography color={colors.grey[400]} variant="h6">
+          {quantity} Qty.
+        </Typography>
         <Typography fontWeight="bold" variant="h5">
           &#x20B1;{price}
         </Typography>
