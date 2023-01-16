@@ -9,7 +9,7 @@ const ReceiptModal = ({ open, onClose, data }) => {
     content: () => componentRef.current,
     documentTitle: 'receipt',
     onAfterPrint: () => onClose(),
-    pageStyle: '@page { size: auto; margin: 0 0 25mm 0;}'
+    pageStyle: '@page { margin-bottom: 25mm;}'
   })
 
   const vatTotal = (data?.subTotal * 0.12).toFixed(2)

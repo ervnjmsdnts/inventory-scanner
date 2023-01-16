@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useLogin } from '../actions'
 import { ReactComponent as LoginSVG } from '../../assets/login.svg'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const auth = useAuthContext()
@@ -20,6 +21,8 @@ const LoginForm = () => {
   const { register, handleSubmit } = useForm()
 
   const { isValidating: loginValidate, login } = useLogin()
+
+  const navigate = useNavigate()
 
   const onSubmit = useCallback(
     async data => {
@@ -98,12 +101,23 @@ const LoginForm = () => {
           >
             {loginValidate ? 'Logging in' : 'Log in'}
           </Button>
+          <Button variant="contained" onClick={() => navigate('/scan')}>
+            Scan
+          </Button>
         </Stack>
+        <Box sx={{ display: { xs: 'block', sm: 'none' }, textAlign: 'center' }}>
+          <Typography color="gray">
+            &copy; All Right Reserved Saranghaeyo Korean Store
+          </Typography>
+          <Typography color="gray">
+            Developed & Maintaind by The Developers
+          </Typography>
+        </Box>
       </Box>
       <Box
         sx={{
           background: 'linear-gradient(to bottom, #00A3F9, #6B0AC9)',
-          display: 'flex',
+          display: { xs: 'none', sm: 'flex' },
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
