@@ -1,17 +1,20 @@
 import { Box, colors, IconButton, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { useOrder } from '../../contexts/OrderContext'
+import { toast } from 'react-hot-toast'
 
 const SelectProduct = props => {
   const { addOrderItem } = useOrder()
   const { name, price, quantity, image } = props
+
+  const outOfStock = () => toast.error('Product is out of stock')
 
   return (
     <Box
       width="100%"
       height="100%"
       borderRadius="12px"
-      backgroundColor="white"
+      backgroundColor={quantity <= 0 ? colors.red[100] : 'white'}
       boxShadow={2}
       position="relative"
       p="16px"
@@ -24,7 +27,9 @@ const SelectProduct = props => {
             backgroundColor: 'primary.main',
             '&:hover': { backgroundColor: colors.blue[100] }
           }}
-          onClick={() => addOrderItem({ ...props, amount: 1 })}
+          onClick={() => {
+            quantity <= 0 ? outOfStock() : addOrderItem({ ...props, amount: 1 })
+          }}
           borderRadius="999px"
           p="4px"
         >

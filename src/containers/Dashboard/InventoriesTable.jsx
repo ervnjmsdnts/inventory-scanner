@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useChangeImage, useDeleteProduct } from '../actions'
 import AddProductDialog from './AddProductDialog'
+import { red } from '@mui/material/colors'
 
 const DeleteButton = ({ id, mutate }) => {
   const { deleteProduct } = useDeleteProduct()
@@ -18,7 +19,7 @@ const DeleteButton = ({ id, mutate }) => {
   return (
     <Tooltip title="Delete Product">
       <IconButton onClick={deleteExec}>
-        <DeleteOutline sx={{ color: colors.red[300] }} />
+        <DeleteOutline sx={{ color: colors.red[400] }} />
       </IconButton>
     </Tooltip>
   )
@@ -101,6 +102,8 @@ const InventoriesTable = ({ products, mutate }) => {
     }
   ]
 
+  console.log({ products })
+
   const [open, setOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
 
@@ -125,9 +128,21 @@ const InventoriesTable = ({ products, mutate }) => {
       >
         <DataGrid
           getRowId={row => row._id}
-          sx={{ border: 'none' }}
+          sx={{
+            border: 'none',
+            '.out-of-stock': {
+              bgcolor: red[100],
+              ':hover': {
+                bgcolor: red[200]
+              }
+            }
+          }}
           rows={products}
+          getRowClassName={params =>
+            params.row.quantity <= 0 ? 'out-of-stock' : ''
+          }
           onRowDoubleClick={item => openModal(item.row)}
+          row
           columns={columns}
           pageSize={10}
         />

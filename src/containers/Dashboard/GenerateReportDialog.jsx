@@ -31,7 +31,7 @@ const GenerateReportDialog = ({ orders, open, onClose }) => {
       Total: order.subTotal.toFixed(2),
       'Payment Amount': order.paymentAmount.toFixed(2),
       'Change Due': (order.paymentAmount - order.subTotal).toFixed(2),
-      'Created At': moment(order.createdAt).format('MMMM/DD/YYYY')
+      'Order Date': moment(order.createdAt).format('MMMM/DD/YYYY hh:mm:ss A')
     }))
 
   return (

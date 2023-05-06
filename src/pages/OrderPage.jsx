@@ -1,5 +1,5 @@
 import { Box, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Loading from '../components/Loading'
 import { useGetAllProducts } from '../containers/actions'
 import OrderBar from '../containers/Order/OrderBar'
@@ -36,8 +36,8 @@ const OrderPage = () => {
         </Box>
         {searchProduct.length ? (
           <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap="16px">
-            {searchProduct.map(order => (
-              <SelectProduct key={order.name} {...order} />
+            {searchProduct.map((order, index) => (
+              <SelectProduct key={index} {...order} />
             ))}
           </Box>
         ) : (
