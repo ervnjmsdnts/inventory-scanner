@@ -6,6 +6,7 @@ import {
   useMemo,
   useState
 } from 'react'
+import { toast } from 'react-hot-toast'
 
 const OrderContext = createContext()
 
@@ -41,7 +42,17 @@ const OrderProvider = ({ children }) => {
           : order
       )
 
-      setOrderItems(newState)
+      if (
+        newState.some(
+          order => order.name === item.name && order.amount > item.quantity
+        )
+      ) {
+        toast.error(
+          `You can't order more than ${item.quantity} ${item.name}(s).`
+        )
+      } else {
+        setOrderItems(newState)
+      }
     },
     [orderItems]
   )

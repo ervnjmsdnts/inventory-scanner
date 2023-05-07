@@ -24,7 +24,18 @@ const yearList = [
   moment().year() - 3
 ]
 
-const weekList = ['Week 1', 'Week 2', 'Week 3', 'Week 4']
+const monthStart = moment().startOf('month')
+const monthEnd = moment().endOf('month')
+
+const weekList = []
+let currentWeek = monthStart.clone().startOf('week')
+
+while (currentWeek.isBefore(monthEnd)) {
+  const weekStart = currentWeek.format('MMM DD')
+  const weekEnd = currentWeek.clone().endOf('week').format('MMM DD')
+  weekList.push({ start: weekStart, end: weekEnd })
+  currentWeek.add(1, 'week')
+}
 
 const CustomToolTip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -54,7 +65,7 @@ const SalesChart = ({ orders, filter }) => {
     const total = orders.filter(
       order => moment(order.createdAt).week() === index + 1
     )
-    return { date: week, orders: total.length }
+    return { date: `${week.start} - ${week.end}`, orders: total.length }
   })
 
   const filteredYear = yearList

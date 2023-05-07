@@ -16,6 +16,8 @@ const OrderItem = props => {
 
   const calculatedPrice = item.amount * item.price
 
+  console.log({ orderItems })
+
   return (
     <Box
       p="16px"
